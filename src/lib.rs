@@ -2,7 +2,11 @@ use anyhow::{bail, Error, Ok, Result};
 use base64::prelude::*;
 
 use rand::{distributions::Alphanumeric, Rng};
-
+/**
+ * 根据给定的字符串种子生成一个哈希值。
+ * @param seed 字符串种子，用于生成哈希值。
+ * @return 返回计算得到的哈希值，类型为usize。
+ */
 pub fn seed_hash(seed: &str) -> usize {
     let mut hash = 0;
     seed.chars()
@@ -12,6 +16,17 @@ pub fn seed_hash(seed: &str) -> usize {
 }
 
 const CRYPTO: &str = "7JMatMkJ4TitbPJcQIm5ncz3oRS1ybCmvCKBrqxyxO6VopxSOCZOLJXjiMRClhzNAYKZqPGlv6Hbt7C1hBjkofSFEV2GQsHkuNFkazZAzelx0Xvhubv0WcCnHMOuSZFn";
+/// 根据给定的种子和长度生成一个密码。
+///
+/// 使用种子字符串和指定的长度来生成密码。密码的生成基于种子的哈希值和一组加密字符。
+/// 如果生成的密码长度不足，将通过随机方式添加额外的字符，确保最终密码长度符合要求。
+///
+/// # 参数
+/// - `seed`: 用于生成密码的种子字符串。
+/// - `length`: 密码的最小长度。
+///
+/// # 返回值
+/// 返回一个 `Result`，其中包含生成的密码字符串。如果生成过程中出现错误，则返回错误信息。
 pub fn generator_password(seed: &str, length: usize) -> Result<String, Error> {
     if seed.len() < 4 {
         bail!("seed length is too short! please try again!")
@@ -55,6 +70,14 @@ pub fn generator_password(seed: &str, length: usize) -> Result<String, Error> {
     Ok(password)
 }
 
+/**
+ * 生成一个加密字符串。
+ *
+ * 这个函数使用随机数生成器创建一个长度为128的随机字符串，该字符串包含字母和数字。
+ * 生成的字符串可用于作为加密盐或临时安全令牌。
+ *
+ * @return 生成的随机字符串。
+ */
 fn generator_crypto() -> String {
     let mut rng = rand::thread_rng();
     let random_string = std::iter::repeat(())
